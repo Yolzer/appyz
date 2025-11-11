@@ -1,0 +1,118 @@
+ion-content {
+    --background: none; /* Elimina cualquier fondo global */
+    background-image: url('../../../assets/img/fondo.jpg');  
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+ 
+  }
+
+   
+  ion-card {
+    background-color: rgba(255, 255, 255, 0.5); /* Fondo semitransparente */
+    backdrop-filter: blur(5px); /* Opcional: agrega un efecto de desenfoque detrás */
+    box-shadow: none;
+    border-radius: 5%;
+    margin: 10%  auto;
+    width: 90%; 
+  }
+
+  .logo-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    padding-top: 20%;
+  }
+
+  .login-container img {
+    width: 60%;  
+  }
+
+  ion-card ion-input {
+    --background: transparent; /* Fondo transparente */
+    color: darkgreen; /* Color de texto en naranja oscuro */
+  }
+  
+  ion-card input {
+    background-color: transparent; /* Fondo transparente para navegadores que no usan variables CSS */
+    color: darkgreen; /* Color de texto en naranja oscuro */
+  }
+
+
+  ion-card ion-label {
+    --background: transparent; /* Fondo transparente */
+    color: #D35400; /* Color de texto en naranja oscuro */
+  }
+  
+  ion-card label {
+    background-color: transparent; /* Fondo transparente para navegadores que no usan variables CSS */
+    color: #D35400; /* Color de texto en naranja oscuro */
+  }
+
+
+  ion-card ion-item {
+    --background: transparent; /* Fondo transparente */
+    color: #D35400; /* Color de texto en naranja oscuro */
+  }
+  
+  ion-card ion-button.login-button {
+    --background: #D35400; /* Fondo en naranja oscuro */
+    color: white; /* Texto en blanco para buen contraste */
+  }
+
+  .register-button {
+    color: darkgreen;
+    text-transform: uppercase;
+    margin-top: 10px;
+  }
+   
+
+  .forgot-password {
+    text-align: center;
+    margin-top: 10px;
+    display: block;
+  
+    a {
+      color: darkred;
+      text-decoration: none;
+    }
+  }
+
+  .logox { 
+    height: auto;
+    animation: zoomIn 3s ease-in-out infinite alternate;
+  }
+
+   /* Animación de zoom suave */
+   @keyframes zoomIn {
+    0% {
+      transform: scale(1); /* Tamaño original */
+    }
+    100% {
+      transform: scale(0.5); /* Zoom leve */
+    }
+  }
+
+
+  .logo {
+    width: 100%; /* Ajusta el tamaño según tus necesidades */
+    animation: zoomInOut 5s  ease-in-out; /* Animación infinita */
+    opacity: 0;
+    animation-fill-mode: forwards; /* Mantiene el estado final */
+  }
+  
+  /* Definir la animación */
+  @keyframes zoomInOut {
+    0% {
+      transform: scale(1); /* Tamaño inicial */
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.1); /* Zoom al 10% */
+      opacity: 1; /* Aparece completamente */
+    }
+    100% {
+      transform: scale(1); /* Regresa al tamaño inicial */
+      opacity: 0.8; /* Opcional: un ligero desvanecimiento */
+    }
+  }
