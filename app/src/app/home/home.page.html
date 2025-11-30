@@ -1,55 +1,25 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>  
-    <app-company-name [companyName]="'Frutix'"></app-company-name>  
-    <ion-buttons slot="end"> 
-        <ion-menu-button menu="mainMenu"></ion-menu-button>
-   </ion-buttons> 
-  </ion-toolbar> 
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Gasto Rápido</ion-title>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding"> 
-  
+<ion-content class="ion-padding">
+  <ion-segment [(ngModel)]="scope" (ionChange)="refreshTotals()">
+    <ion-segment-button value="day"><ion-label>Hoy</ion-label></ion-segment-button>
+    <ion-segment-button value="month"><ion-label>Mes</ion-label></ion-segment-button>
+    <ion-segment-button value="year"><ion-label>Año</ion-label></ion-segment-button>
+    <ion-segment-button value="all"><ion-label>Total</ion-label></ion-segment-button>
+  </ion-segment>
 
-  <!-- Imagen de usuario y mensaje de bienvenida -->
-  <div class="user-info">
-    <img src="../../assets/img/user.png" alt="User Avatar" class="user-avatar" />
-    <h2><strong>{{ bienvenidos }}</strong><br/> {{ email }}</h2>
-    <span>Tienes 2500 puntos</span>
-  </div>
-
-
-  <div class="ofertas-info"> 
-    <h2>Ofertas</h2>
-  </div>
-
- <!-- Cards de Ofertas -->
- <ion-card>
-  <img src="../../assets/img/manzanas.jpg" alt="Manzana" />
+<ion-card class="kpi">
   <ion-card-header>
-    <ion-card-title>Manzana</ion-card-title>
+    <ion-card-title class="kpi-label">Total {{ label }}</ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    Deliciosas manzanas rojas, frescas y perfectas para un snack saludable.
+    <h1 class="kpi-number">{{ display | number:'1.0-0' }}</h1>
   </ion-card-content>
 </ion-card>
 
-<ion-card>
-  <img src="../../assets/img/bananas.jpeg" alt="Banana" />
-  <ion-card-header>
-    <ion-card-title>Banana</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    Bananas maduras, ricas en potasio y perfectas para cualquier momento del día.
-  </ion-card-content>
-</ion-card>
-
-<ion-card>
-  <img src="../../assets/img/naranjas.jpg" alt="Naranja" />
-  <ion-card-header>
-    <ion-card-title>Naranja</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    Jugosas naranjas, ideales para obtener toda la vitamina C que necesitas.
-  </ion-card-content>
-</ion-card>
+  <ion-button expand="block" routerLink="/gastos">Ir a gastos</ion-button>
 </ion-content>

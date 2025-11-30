@@ -4,6 +4,7 @@ import { Component, OnInit, Input } from '@angular/core';
   selector: 'app-company-name',
   templateUrl: './company-name.component.html',
   styleUrls: ['./company-name.component.scss'],
+  standalone: false
 })
 export class CompanyNameComponent    {
 

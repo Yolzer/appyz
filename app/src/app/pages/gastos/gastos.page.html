@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title class="title-white">Gastos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- tu lista de gastos aquí -->
+  <ion-list>
+    <ion-item *ngFor="let g of exp.list()" (click)="go(g.id)">
+      <ion-label>
+        <h2>{{ g.title }}</h2>
+        <p>{{ g.date | date:'short' }}</p>
+      </ion-label>
+      <ion-note slot="end">{{ g.amount | number:'1.0-0' }}</ion-note>
+    </ion-item>
+  </ion-list>
+
+ 
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openAdd()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+    <ion-fab slot="fixed" vertical="bottom" horizontal="start">
+    <ion-fab-button class="back-btn" size="small" (click)="goHome()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-alert
+    header="Nuevo gasto"
+    [isOpen]="addOpen"
+    (didDismiss)="addOpen=false"
+    [inputs]="alertInputs"
+    [buttons]="alertButtons"
+    (didPresent)="$event">
+  </ion-alert>
+</ion-content>

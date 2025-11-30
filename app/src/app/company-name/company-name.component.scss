@@ -1,13 +1,11 @@
-.company-content{
-    display: flex; 
-    align-items: center;
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
 }
-
-.company-content  img {
-    width: 25%;
-    position: absolute;
-    margin-left: 3%;
-  }
-.company-icon{
-    margin-right: 8px;
-} 
+.brand img {
+  height: 64px;   
+  width: auto;
+  filter: none;   
+}

@@ -20,8 +20,16 @@ const routes: Routes = [
     loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule)
   },
   {
-    path: 'tabs',
-    loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
+    path: 'gastos',
+    loadChildren: () => import('./pages/gastos/gastos.module').then( m => m.GastosPageModule)
+  },
+  {
+    path: 'detalle-gasto',
+    loadChildren: () => import('./pages/detalle-gasto/detalle-gasto.module').then( m => m.DetalleGastoPageModule)
+  },
+  {
+    path: 'config',
+    loadChildren: () => import('./pages/config/config.module').then( m => m.ConfigPageModule)
   },
 ];
 

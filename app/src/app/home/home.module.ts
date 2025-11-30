@@ -7,15 +7,13 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { CompanyNameComponent } from '../company-name/company-name.component';
 
-
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule, 
-    CompanyNameComponent
+    HomePageRoutingModule
   ],
-  declarations: [HomePage]
+  declarations: [HomePage, CompanyNameComponent]
 })
 export class HomePageModule {}

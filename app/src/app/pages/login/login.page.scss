@@ -1,118 +1,112 @@
+/* ===== Fondo corporativo ===== */
+:host {
+  /* evita fondo negro heredado (modo dark) */
+  --ion-background-color: transparent !important;
+}
+
 ion-content {
-    --background: none; /* Elimina cualquier fondo global */
-    background-image: url('../../../assets/img/fondo.jpg');  
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
- 
-  }
+  /* Usa ruta ABSOLUTA desde la raíz del app */
+  --background: url('/assets/img/bg-corporate.png') center center / cover no-repeat !important;
 
-   
-  ion-card {
-    background-color: rgba(255, 255, 255, 0.5); /* Fondo semitransparente */
-    backdrop-filter: blur(5px); /* Opcional: agrega un efecto de desenfoque detrás */
-    box-shadow: none;
-    border-radius: 5%;
-    margin: 10%  auto;
-    width: 90%; 
-  }
+  /* Por si quedó un background sólido heredado */
+  background: transparent !important;
+}
 
-  .logo-container {
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    padding-top: 20%;
-  }
 
-  .login-container img {
-    width: 60%;  
-  }
+/* ===== Card del login ===== */
+ion-card {
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 18px rgba(31, 41, 55, 0.08);
+  border-radius: 16px;
+  margin: 10% auto;
+  width: 90%;
+}
 
-  ion-card ion-input {
-    --background: transparent; /* Fondo transparente */
-    color: darkgreen; /* Color de texto en naranja oscuro */
+/* ===== Branding ===== */
+.logo-container,
+.login-brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20%;
+}
+.login-container img,
+.login-brand img {
+  width: 60%;
+}
+
+.login-title {
+  h2, p {
+    color: var(--ion-color-primary) !important; /* toma el azul definido en variables.scss */
   }
+}
+
+
+/* ===== Inputs / labels ===== */
+/* Paleta: primario #1E6BA2, secundario #BE8B09, gris #68757B */
+ion-card ion-input,
+ion-card input {
+  --background: transparent;
+  color: #1f2937; /* texto */
+}
+
+ion-card ion-label,
+ion-card label {
+  background-color: transparent;
+  color: #68757B; /* gris profesional */
+}
+
+ion-card ion-item {
+  --background: transparent;
+  color: #68757B;
+}
+
+/* ===== Botones ===== */
+ion-card ion-button.login-button {
+  --background: #1E6BA2; /* primario azul */
+  --background-activated: #195b8a;
+  color: #FFFFFF;
+}
+
+.register-button {
+  color: #1E6BA2; /* link/cta secundario en azul */
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+.forgot-password {
+  text-align: center;
+  margin-top: 10px;
+  display: block;
+  a {
+    color: #BE8B09; /* acento dorado */
+    text-decoration: none;
+  }
+}
+
+/* ===== Animaciones existentes ===== */
+.logox {
+  height: auto;
+  animation: zoomIn 3s ease-in-out infinite alternate;
+}
+
+@keyframes zoomIn {
+  0% { transform: scale(1); }
+  100% { transform: scale(0.5); }
+}
+
+.logo {
+  width: 100%;
+  animation: zoomInOut 5s ease-in-out;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+@keyframes zoomInOut {
+  0%   { transform: scale(1);   opacity: 0; }
+  50%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1);   opacity: 0.8; }
+
   
-  ion-card input {
-    background-color: transparent; /* Fondo transparente para navegadores que no usan variables CSS */
-    color: darkgreen; /* Color de texto en naranja oscuro */
-  }
-
-
-  ion-card ion-label {
-    --background: transparent; /* Fondo transparente */
-    color: #D35400; /* Color de texto en naranja oscuro */
-  }
-  
-  ion-card label {
-    background-color: transparent; /* Fondo transparente para navegadores que no usan variables CSS */
-    color: #D35400; /* Color de texto en naranja oscuro */
-  }
-
-
-  ion-card ion-item {
-    --background: transparent; /* Fondo transparente */
-    color: #D35400; /* Color de texto en naranja oscuro */
-  }
-  
-  ion-card ion-button.login-button {
-    --background: #D35400; /* Fondo en naranja oscuro */
-    color: white; /* Texto en blanco para buen contraste */
-  }
-
-  .register-button {
-    color: darkgreen;
-    text-transform: uppercase;
-    margin-top: 10px;
-  }
-   
-
-  .forgot-password {
-    text-align: center;
-    margin-top: 10px;
-    display: block;
-  
-    a {
-      color: darkred;
-      text-decoration: none;
-    }
-  }
-
-  .logox { 
-    height: auto;
-    animation: zoomIn 3s ease-in-out infinite alternate;
-  }
-
-   /* Animación de zoom suave */
-   @keyframes zoomIn {
-    0% {
-      transform: scale(1); /* Tamaño original */
-    }
-    100% {
-      transform: scale(0.5); /* Zoom leve */
-    }
-  }
-
-
-  .logo {
-    width: 100%; /* Ajusta el tamaño según tus necesidades */
-    animation: zoomInOut 5s  ease-in-out; /* Animación infinita */
-    opacity: 0;
-    animation-fill-mode: forwards; /* Mantiene el estado final */
-  }
-  
-  /* Definir la animación */
-  @keyframes zoomInOut {
-    0% {
-      transform: scale(1); /* Tamaño inicial */
-      opacity: 0;
-    }
-    50% {
-      transform: scale(1.1); /* Zoom al 10% */
-      opacity: 1; /* Aparece completamente */
-    }
-    100% {
-      transform: scale(1); /* Regresa al tamaño inicial */
-      opacity: 0.8; /* Opcional: un ligero desvanecimiento */
-    }
-  }
+}

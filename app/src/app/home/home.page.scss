@@ -1,66 +1,65 @@
+:host {
+  --ion-toolbar-color: hsl(0, 0%, 100%) !important; /* fallback */
+}
+
+ion-header ion-toolbar ion-title,
+ion-header ion-toolbar .toolbar-title,
+ion-header ion-toolbar .title-default {
+  color: #ffffff !important;
+}
+
+ion-header ion-toolbar {
+
+  /* color del texto/iconos del toolbar */
+  --color: #ffffff !important;
+}
+
+ion-content {
+  --background: none;
+  background-image: url('../../assets/img/bg-corporate.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+/* ===== Contenedor demo (si lo usas) ===== */
 #container {
   text-align: center;
-
   position: absolute;
-  left: 0;
-  right: 0;
+  left: 0; right: 0;
   top: 50%;
   transform: translateY(-50%);
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
+#container strong { font-size: 20px; line-height: 26px; }
+#container p { font-size: 16px; line-height: 22px; color: #68757B; margin: 0; }
+#container a { text-decoration: none; }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
-
+/* ===== Info de usuario (si aplica) ===== */
 .user-info {
   display: flex;
   align-items: center;
   flex-direction: column;
   text-align: center;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
+.user-info h2 { font-size: 1em; }
+.user-avatar { width: 100px; height: 100px; border-radius: 50%; }
+.user-info span { font-size: 0.8em; font-weight: bold; }
 
-.user-info h2 {
-  font-size: 1em;
-}
-
-.user-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%; 
-}
-
-.user-info  span { 
-  font-size: 0.8em;
-  font-weight: bold;
-}
-
+/* ===== KPI card ===== */
 ion-card {
-  background-color: rgba(255, 255, 255, 0.5); /* Fondo semitransparente */
-  backdrop-filter: blur(5px); /* Opcional: agrega un efecto de desenfoque detrás */
-  box-shadow: none;
-  border-radius: 5%;
-  margin: 10%  auto;
-  width: 75%; 
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 24px rgba(31, 41, 55, 0.06);
+  border-radius: 16px;
+  margin: 10% auto;
+  width: 75%;
 }
 
 ion-card ion-item {
-  --background: transparent; /* Fondo transparente */
-  color: #D35400; /* Color de texto en naranja oscuro */
+  --background: transparent;
+  color: #68757B;
 }
 
 ion-card-header {
@@ -68,21 +67,48 @@ ion-card-header {
   text-align: center;
 }
 
+ion-header ion-toolbar {
+  /* Ionic usa esta variable para el color del texto/iconos del toolbar */
+  --color: #000000 !important;
+}
 
+/* ===== Segment / número destacado ===== */
+ion-segment { --background: transparent; }
+ion-segment-button {
+  --color: #68757B;
+  --color-checked: #1E6BA2;     /* azul activo */
+  --indicator-color: #1E6BA2;
+}
 
+.kpi-number {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1.1;
+  color: #1E6BA2; /* número en azul */
+  text-align: center;
+}
+
+.kpi-label {
+  color: #000000 !important;
+  opacity: 1 !important; /* por si algún estilo la deja atenuada */
+}
+
+/* ===== Mensajes/animación opcional ===== */
 .ofertas-info {
   text-align: center;
-  color: darkgreen;
+  color: #1E6BA2;
   animation: zoomIn 3s ease-in-out infinite alternate;
   margin-top: 15%;
 }
 
- /* Animación de zoom suave */
- @keyframes zoomIn {
-  0% {
-    transform: scale(1); /* Tamaño original */
-  }
-  100% {
-    transform: scale(0.8); /* Zoom leve */
-  }
+@keyframes zoomIn {
+  0%   { transform: scale(1); }
+  100% { transform: scale(0.8); }
+}
+
+/* ===== Botones primarios en azul por consistencia ===== */
+ion-button {
+  --background: #1E6BA2;
+  --background-activated: #195b8a;
+  color: #FFFFFF;
 }

@@ -1,0 +1,14 @@
+:host {
+  --ion-toolbar-color: #ffffff !important; /* fallback */
+}
+
+ion-header ion-toolbar {
+
+  --color: #ffffff !important;
+}
+
+ion-header ion-toolbar ion-title,
+ion-header ion-toolbar .toolbar-title,
+ion-header ion-toolbar .title-default {
+  color: #ffffff !important;
+}

@@ -1,37 +1,70 @@
- 
-<ion-content [fullscreen]="true"  > 
+<ion-content [fullscreen]="true">
+
   <div class="login-container">
 
-     <!-- Imagen del logo -->
-     <div class="logo-container">
-      <img src="../../../assets/img/logo_frutix.png" alt="Logo" class="logo">
+    <!-- Logo corporativo -->
+    <div class="login-brand">
+      <img src="assets/logo/brand.png" alt="Logo Gasto Rápido" />
+    </div>
+
+    <!-- Título / subtítulo -->
+    <div class="login-title">
+      <h2>Bienvenido a Gasto Rápido</h2>
+      <p>Por favor, inicia sesión para continuar</p>
     </div>
 
     <ion-card class="login-card">
-       
-
       <ion-card-content>
 
+        <form (ngSubmit)="login()">
+          <ion-item class="input-item">
+            <ion-label position="floating" color="primary">Email</ion-label>
+            <ion-input
+              [(ngModel)]="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              inputmode="email"
+              required>
+            </ion-input>
+          </ion-item>
 
-        <ion-item class="input-item">
-          <ion-label position="floating" color="primary">Email</ion-label>
-          <ion-input  [(ngModel)]="email" type="email"></ion-input>
-        </ion-item>
+          <ion-item class="input-item">
+            <ion-label position="floating" color="primary">Password</ion-label>
+            <ion-input
+              [(ngModel)]="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required>
+            </ion-input>
+          </ion-item>
 
-        <ion-item class="input-item">
-          <ion-label position="floating" color="primary">Password</ion-label>
-          <ion-input [(ngModel)]="password" type="password"></ion-input>
-        </ion-item>
+          <!-- Botón Login -->
+          <ion-button
+            expand="block"
+            type="submit"
+            class="login-button">
+            LOGIN
+          </ion-button>
+        </form>
 
-        <!-- Boton Login-->
-        <ion-button expand="block"  (click)="login()" class="login-button" >Login</ion-button>
-        
-        <ion-button expand="block" (click)="registro()"   fill="clear"   class="register-button">Registrarse</ion-button>
+        <!-- Registro -->
+        <ion-button
+          expand="block"
+          (click)="registro()"
+          fill="clear"
+          class="register-button">
+          REGISTRARSE
+        </ion-button>
 
+        <!-- Olvidaste contraseña -->
         <ion-text class="forgot-password" color="medium">
           <a href="#">Olvidaste tu contraseña</a>
         </ion-text>
+
       </ion-card-content>
     </ion-card>
   </div>
+
 </ion-content>

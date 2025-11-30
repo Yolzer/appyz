@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Detalle de gasto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="e">
+  <ion-item>
+    <ion-input label="Título" [(ngModel)]="e.title"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input label="Monto" type="number" [(ngModel)]="e.amount"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-datetime label="Fecha" presentation="date-time" [(ngModel)]="e.date"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-input label="Categoría" [(ngModel)]="e.category"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-textarea label="Notas" autoGrow="true" [(ngModel)]="e.notes"></ion-textarea>
+  </ion-item>
+
+  <ion-button expand="block" (click)="save()">Guardar</ion-button>
+  <ion-button expand="block" color="danger" (click)="del()">Eliminar</ion-button>
+</ion-content>
