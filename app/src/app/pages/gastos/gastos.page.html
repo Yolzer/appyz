@@ -1,20 +1,36 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title class="title-white">Gastos</ion-title>
+    <ion-title>Mis Gastos</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 
-  <!-- tu lista de gastos aquí -->
   <ion-list>
-    <ion-item *ngFor="let g of exp.list()" (click)="go(g.id)">
-      <ion-label>
-        <h2>{{ g.title }}</h2>
-        <p>{{ g.date | date:'short' }}</p>
-      </ion-label>
-      <ion-note slot="end">{{ g.amount | number:'1.0-0' }}</ion-note>
-    </ion-item>
+    <ion-item-sliding *ngFor="let g of exp.list()">
+      <ion-item button (click)="go(g.id)">
+        
+        <ion-thumbnail slot="start" *ngIf="g.image">
+          <img [src]="g.image" alt="recibo" />
+        </ion-thumbnail>
+        <ion-icon [name]="getIcon(g.category || '')" slot="start" *ngIf="!g.image" size="large"></ion-icon>
+        
+        <ion-label>
+          <h2>{{ g.title }}</h2>
+          <p>{{ g.category || 'Sin categoría' }} - {{ g.date | date:'shortDate' }}</p>
+        </ion-label>
+        <ion-note slot="end" color="danger">
+          -${{ g.amount | number:'1.0-0' }}
+        </ion-note>
+      </ion-item>
+
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="borrarGasto(g.id)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 
  
@@ -24,18 +40,9 @@
     </ion-fab-button>
   </ion-fab>
 
-    <ion-fab slot="fixed" vertical="bottom" horizontal="start">
-    <ion-fab-button class="back-btn" size="small" (click)="goHome()">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="start">
+    <ion-fab-button color="light" size="small" (click)="goHome()">
       <ion-icon name="arrow-back"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
-  <ion-alert
-    header="Nuevo gasto"
-    [isOpen]="addOpen"
-    (didDismiss)="addOpen=false"
-    [inputs]="alertInputs"
-    [buttons]="alertButtons"
-    (didPresent)="$event">
-  </ion-alert>
 </ion-content>

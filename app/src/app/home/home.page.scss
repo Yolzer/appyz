@@ -49,17 +49,16 @@ ion-content {
 
 /* ===== KPI card ===== */
 ion-card {
-  background-color: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 6px 24px rgba(31, 41, 55, 0.06);
+  background: white; /* Fondo blanco sólido */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Sombra suave elegante */
   border-radius: 16px;
-  margin: 10% auto;
-  width: 75%;
+  margin: 16px;
 }
 
-ion-card ion-item {
-  --background: transparent;
-  color: #68757B;
+.kpi-number {
+  color: #2dd36f; /* Verde financiero o usa var(--ion-color-success) */
+  font-weight: 700;
+  font-size: 3rem;
 }
 
 ion-card-header {

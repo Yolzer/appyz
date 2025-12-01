@@ -31,11 +31,15 @@ export class LoginPage   {
   }
 
   login() {
-    // Verificar que el campo de correo no esté vacío
-    if (!this.email) {
-     this.mostrarAlerta('El campo de correo no puede estar vacío.');
-     return;
-   }
+    if (this.email && this.password.length >= 3) {
+      // Guardar estado de sesión (para el AuthGuard)
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('user_email', this.email);
+
+      this.navCtrl.navigateForward(['/home']);
+    } else {
+      this.mostrarAlerta('Credenciales incorrectas.');
+    }
 
    // Validar el formato del correo
   if (!this.validarEmail(this.email)) {

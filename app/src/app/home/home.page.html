@@ -12,14 +12,23 @@
     <ion-segment-button value="all"><ion-label>Total</ion-label></ion-segment-button>
   </ion-segment>
 
-<ion-card class="kpi">
-  <ion-card-header>
-    <ion-card-title class="kpi-label">Total {{ label }}</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    <h1 class="kpi-number">{{ display | number:'1.0-0' }}</h1>
-  </ion-card-content>
-</ion-card>
+  <ion-card class="kpi">
+    <ion-card-header>
+      <ion-card-title class="kpi-label">Total {{ label }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <h1 class="kpi-number">{{ total | currency:'CLP':'$':'1.0-0' }}</h1>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Resumen por Categoría</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas id="expenseChart"></canvas>
+    </ion-card-content>
+  </ion-card>
 
   <ion-button expand="block" routerLink="/gastos">Ir a gastos</ion-button>
 </ion-content>

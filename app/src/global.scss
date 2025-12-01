@@ -44,9 +44,9 @@
 
 /* estilos globales*/ 
 
-ion-app, ion-content {
-    --background: url('../src/assets/img/fondo_paginas.jpg') no-repeat center center / cover;
- }
+body {
+  --ion-background-color: #f4f5f8; /* Gris muy suave */
+}
 
  ion-header {
     --background: transparent; /* Fondo transparente */

@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Nuevo Gasto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item class="amount-item">
+    <ion-label position="stacked">Monto ($)</ion-label>
+    <ion-input type="number" placeholder="0" [(ngModel)]="amount" class="amount-input"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Concepto</ion-label>
+    <ion-input type="text" placeholder="Ej: Almuerzo" [(ngModel)]="title"></ion-input>
+  </ion-item>
+
+  <div class="categories-container ion-margin-top">
+    <p>Categoría:</p>
+    <ion-chip *ngFor="let cat of categories"
+              [color]="category === cat.name ? 'primary' : 'medium'"
+              (click)="category = cat.name">
+      <ion-icon [name]="cat.icon"></ion-icon>
+      <ion-label>{{ cat.name }}</ion-label>
+    </ion-chip>
+  </div>
+
+  <ion-item>
+    <ion-label>Fecha</ion-label>
+    <ion-datetime-button datetime="datetime"></ion-datetime-button>
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime id="datetime" presentation="date" [(ngModel)]="date"></ion-datetime>
+      </ng-template>
+    </ion-modal>
+  </ion-item>
+
+
+  <ion-item lines="none" class="ion-margin-vertical">
+    <ion-label>Foto del Recibo (Opcional)</ion-label>
+    <ion-button slot="end" (click)="takePhoto()" fill="outline">
+      <ion-icon slot="start" name="camera"></ion-icon>
+      Capturar
+    </ion-button>
+  </ion-item>
+  <ion-img [src]="receiptImage" *ngIf="receiptImage" style="max-height: 150px; border-radius: 8px; border: 1px solid #ccc;"></ion-img>
+
+  <ion-button expand="block" size="large" class="ion-margin-top" (click)="save()" [disabled]="!amount || !title">
+    Guardar Gasto
+  </ion-button>
+</ion-content>
