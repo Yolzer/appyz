@@ -40,6 +40,14 @@ const routes: Routes = [
     path: 'tabs',
     loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule),
     canActivate: [AuthGuard] // Ruta Protegida
+  },
+  {
+    path: 'recuperar',
+    loadChildren: () => import('./pages/recuperar/recuperar.module').then( m => m.RecuperarPageModule)
+  },
+  {
+    path: 'cambiar-password',
+    loadChildren: () => import('./pages/cambiar-password/cambiar-password.module').then( m => m.CambiarPasswordPageModule)
   }
 ];
 

@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Recuperar Cuenta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="ion-text-center ion-margin-bottom">
+    <ion-icon name="shield-checkmark-outline" style="font-size: 60px; color: var(--ion-color-medium);"></ion-icon>
+    <h3>Validación de Seguridad</h3>
+    <p>Ingresa tus datos para verificar tu identidad</p>
+  </div>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked">Correo Electrónico</ion-label>
+        <ion-input [(ngModel)]="email" type="email" placeholder="Ej: juan@mail.com"></ion-input>
+      </ion-item>
+
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked">Nombre de Usuario (Nombre real)</ion-label>
+        <ion-input [(ngModel)]="nombre" type="text" placeholder="Ej: Juan"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" (click)="validarUsuario()" class="ion-margin-top">
+        Verificar
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,70 +1,42 @@
-<ion-content [fullscreen]="true">
-
-  <div class="login-container">
-
-    <!-- Logo corporativo -->
-    <div class="login-brand">
-      <img src="assets/logo/brand.png" alt="Logo Gasto Rápido" />
-    </div>
-
-    <!-- Título / subtítulo -->
-    <div class="login-title">
-      <h2>Bienvenido a Gasto Rápido</h2>
-      <p>Por favor, inicia sesión para continuar</p>
-    </div>
-
-    <ion-card class="login-card">
+<ion-content [fullscreen]="true" class="bg-login">
+  <div class="flex-center" style="display: flex; align-items: center; justify-content: center; height: 100%;">
+    
+    <ion-card class="login-card" style="width: 85%; max-width: 400px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
       <ion-card-content>
+        <div class="ion-text-center ion-margin-bottom">
+          <img src="assets/logo/brand.png" alt="Logo" style="width: 120px; margin-bottom: 10px;">
+          <h2 style="color: var(--ion-color-dark);">Bienvenido</h2>
+          <p class="ion-text-muted">Ingresa a tu cuenta</p>
+        </div>
 
-        <form (ngSubmit)="login()">
-          <ion-item class="input-item">
-            <ion-label position="floating" color="primary">Email</ion-label>
-            <ion-input
-              [(ngModel)]="email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              inputmode="email"
-              required>
-            </ion-input>
-          </ion-item>
+        <ion-item lines="full" class="ion-margin-bottom">
+          <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
+          <ion-label position="stacked">Correo</ion-label>
+          <ion-input [(ngModel)]="email" type="email"></ion-input>
+        </ion-item>
 
-          <ion-item class="input-item">
-            <ion-label position="floating" color="primary">Password</ion-label>
-            <ion-input
-              [(ngModel)]="password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required>
-            </ion-input>
-          </ion-item>
+        <ion-item lines="full" class="ion-margin-bottom">
+          <ion-icon name="lock-closed-outline" slot="start" color="primary"></ion-icon>
+          <ion-label position="stacked">Contraseña</ion-label>
+          <ion-input [(ngModel)]="password" type="password"></ion-input>
+        </ion-item>
 
-          <!-- Botón Login -->
-          <ion-button
-            expand="block"
-            type="submit"
-            class="login-button">
-            LOGIN
-          </ion-button>
-        </form>
+        <div class="ion-text-end ion-margin-vertical">
+          <a [routerLink]="['/recuperar']" style="text-decoration: none; font-size: 0.9em; color: var(--ion-color-primary);">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
 
-        <!-- Registro -->
-        <ion-button
-          expand="block"
-          (click)="registro()"
-          fill="clear"
-          class="register-button">
-          REGISTRARSE
+        <ion-button expand="block" shape="round" class="ion-margin-top" (click)="login()">
+          Ingresar
         </ion-button>
 
-        <!-- Olvidaste contraseña -->
-        <ion-text class="forgot-password" color="medium">
-          <a href="#">Olvidaste tu contraseña</a>
-        </ion-text>
+        <div class="ion-text-center ion-margin-top">
+          <p>¿No tienes cuenta? <a (click)="registro()" style="cursor: pointer; color: var(--ion-color-secondary); font-weight: bold;">Regístrate aquí</a></p>
+        </div>
 
       </ion-card-content>
     </ion-card>
-  </div>
 
+  </div>
 </ion-content>

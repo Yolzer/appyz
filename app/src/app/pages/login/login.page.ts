@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { AlertController } from '@ionic/angular'; 
+import { Component } from '@angular/core';
+import { NavController, AlertController, ToastController } from '@ionic/angular';
+import { StorageService } from '../../storage.service';
 
 @Component({
   selector: 'app-login',
@@ -8,73 +8,76 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
   standalone: false
 })
-export class LoginPage   {
-
+export class LoginPage {
   email: string = '';
   password: string = '';
 
-  constructor(private navCtrl: NavController, private alertController: AlertController ) { }
+  constructor(
+    private navCtrl: NavController,
+    private alertController: AlertController,
+    private toastController: ToastController,
+    private storage: StorageService
+  ) {}
 
-   // Método para mostrar alerta de error
-   async mostrarAlerta(mensaje: string) {
+  async login() {
+    // 1. Validar campos vacíos
+    if (!this.email || !this.password) {
+      this.mostrarAlerta('Faltan Datos', 'El correo y la contraseña son obligatorios.');
+      return;
+    }
+
+    // 2. Validar formato de correo (Mejora UX: avisar si escribió mal el correo antes de buscar)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.email)) {
+      this.mostrarAlerta('Correo Inválido', 'El formato del correo no es correcto.');
+      return;
+    }
+
+    // 3. Obtener base de datos
+    const usersDb = await this.storage.get<any[]>('users_db') || [];
+
+    // 4. Buscar usuario
+    const usuarioEncontrado = usersDb.find(u => u.email === this.email && u.password === this.password);
+
+    if (usuarioEncontrado) {
+      // --- ÉXITO ---
+      console.log('Login exitoso:', usuarioEncontrado);
+      
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('currentUser', JSON.stringify(usuarioEncontrado));
+
+      this.mostrarToast(`¡Hola de nuevo, ${usuarioEncontrado.nombre}!`);
+      this.navCtrl.navigateRoot(['/home']);
+      
+      this.email = '';
+      this.password = '';
+    } else {
+      // --- FALLO ---
+      this.mostrarAlerta('Acceso Denegado', 'Usuario no encontrado o contraseña incorrecta.');
+    }
+  }
+
+  registro() {
+    this.navCtrl.navigateForward(['/registro']);
+  }
+
+  async mostrarAlerta(header: string, message: string) {
     const alert = await this.alertController.create({
-      header: 'Error',
-      message: mensaje,
+      header,
+      message,
       buttons: ['OK']
     });
     await alert.present();
   }
-// Función para validar el formato del email
-   validarEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular básica para validar email
-    return emailRegex.test(email);
+
+  async mostrarToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      position: 'top',
+      color: 'success',
+      icon: 'happy-outline'
+    });
+    await toast.present();
   }
-
-  login() {
-    if (this.email && this.password.length >= 3) {
-      // Guardar estado de sesión (para el AuthGuard)
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('user_email', this.email);
-
-      this.navCtrl.navigateForward(['/home']);
-    } else {
-      this.mostrarAlerta('Credenciales incorrectas.');
-    }
-
-   // Validar el formato del correo
-  if (!this.validarEmail(this.email)) {
-    this.mostrarAlerta('El formato del correo es inválido.');
-    return;
-  }
-
-   // Verificar que la contraseña no esté vacía
-   if (!this.password) {
-    this.mostrarAlerta('El campo de contraseña no puede estar vacío.');
-    return;
-  }
-
-    // Verificar que la contraseña tenga máximo 4 caracteres
-    if ((this.password.length < 3) && (this.password.length > 8)) {
-      this.mostrarAlerta('La contraseña debe tener 3 y 8 caracteres.');
-      return;
-    }
-
-
-    
-    // Si todas las validaciones son correctas, navega a la página "home"
-  this.navCtrl.navigateForward(['/home'], {
-    queryParams: {
-      email: this.email,
-      password: this.password
-    }
-  });
- 
 }
-
-  registro()
-  {
-    this.navCtrl.navigateForward(['/registro']);
-  }
-
-}
- 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Expense, ExpenseService } from '../expense.service';
+import { ExpenseService } from '../expense.service';
 import { Chart, registerables } from 'chart.js';
+import { NavController, AlertController } from '@ionic/angular'; // Importar NavController y Alert
 
 Chart.register(...registerables);
 
@@ -17,20 +18,44 @@ export class HomePage implements OnInit {
   total = 0;
   display = 0;
   label = 'de hoy';
-  
-
   chart: any;
 
-  constructor(private exp: ExpenseService) {}
+  constructor(
+    private exp: ExpenseService,
+    private navCtrl: NavController,
+    private alertController: AlertController
+  ) {}
 
   ngOnInit(): void {
     this.refreshTotals();
   }
 
+  // --- Lógica Logout ---
+  async logout() {
+    const alert = await this.alertController.create({
+      header: 'Cerrar Sesión',
+      message: '¿Estás seguro de que deseas salir?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Salir',
+          handler: () => {
+            // Borrar sesión
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('user_name');
+            // Redirigir al Login
+            this.navCtrl.navigateRoot('/login');
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+  // ---------------------
+
   refreshTotals(): void {
     const now = new Date();
     
-
     switch (this.scope) {
       case 'day':  
         this.total = this.exp.totalByDay(now);  
@@ -51,7 +76,6 @@ export class HomePage implements OnInit {
 
     this.animateCounter(this.display, this.total, 240);
     
- 
     setTimeout(() => {
       this.updateChart();
     }, 100);
@@ -67,18 +91,16 @@ export class HomePage implements OnInit {
     requestAnimationFrame(step);
   }
 
-  
   updateChart() {
-    
     const canvas = document.getElementById('expenseChart') as HTMLCanvasElement;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     
-   
-    const data = [12000, 5000, 3000]; 
-    const labels = ['Comida', 'Transporte', 'Casa'];
+    // Datos Dummy (puedes conectarlo con expense.service si quieres datos reales)
+    const data = [12000, 5000, 3000, 2000, 1500]; 
+    const labels = ['Comida', 'Transporte', 'Casa', 'Ocio', 'Otros'];
 
     if (this.chart) this.chart.destroy(); 
 
@@ -88,13 +110,13 @@ export class HomePage implements OnInit {
         labels: labels,
         datasets: [{
           data: data,
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
           borderWidth: 1
         }]
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, 
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: 'bottom'

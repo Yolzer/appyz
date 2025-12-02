@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular'; 
-import { AlertController } from '@ionic/angular';  
-import { FormtearFechaPipe } from '../../pipes/formtear-fecha.pipe';
+import { NavController, AlertController, ToastController } from '@ionic/angular';
+import { StorageService } from '../../storage.service';
 
 @Component({
   selector: 'app-registro',
@@ -11,41 +10,85 @@ import { FormtearFechaPipe } from '../../pipes/formtear-fecha.pipe';
 })
 export class RegistroPage implements OnInit {
 
-  nombre: any='';
-  apellido: any='';
-  selectedOption: any=''; // nivel de estudios
-  selectedDate: any='';
-  usuario: any='';
-  password: any='';
+  usuario = {
+    nombre: '',
+    apellido: '',
+    email: '',
+    password: '',
+    fechaNacimiento: new Date().toISOString()
+  };
 
- constructor(private alertController: AlertController, 
-             private menu: MenuController,
-            private formtearFechaPipe: FormtearFechaPipe ) { }
+  constructor(
+    private navCtrl: NavController,
+    private alertController: AlertController,
+    private toastController: ToastController,
+    private storage: StorageService
+  ) { }
 
-  ngOnInit() {
-     this.menu.close("mainMenu");
+  ngOnInit() {}
+
+  async guardar() {
+    // 1. Validar campos vacíos
+    if (!this.usuario.nombre || !this.usuario.apellido || !this.usuario.email || !this.usuario.password) {
+      this.mostrarAlerta('Faltan datos', 'Por favor completa todos los campos obligatorios.');
+      return;
+    }
+
+    // 2. Validar formato de correo (Regex simple)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.usuario.email)) {
+      this.mostrarAlerta('Correo Inválido', 'Ingresa un correo electrónico válido (ej: usuario@dominio.com).');
+      return;
+    }
+
+    // 3. Validar contraseña segura
+    // Mínimo 8 caracteres, al menos 1 número, al menos 1 caracter especial
+    const passRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+    
+    if (this.usuario.password.length < 8) {
+      this.mostrarAlerta('Contraseña Débil', 'La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+
+    if (!passRegex.test(this.usuario.password)) {
+      this.mostrarAlerta('Contraseña Insegura', 'La contraseña debe incluir al menos un número y un símbolo especial (!@#$%^&*).');
+      return;
+    }
+
+    // 4. Validar si el correo ya existe
+    const usersDb = await this.storage.get<any[]>('users_db') || [];
+    const existe = usersDb.find(u => u.email === this.usuario.email);
+    
+    if (existe) {
+      this.mostrarAlerta('Error', 'Este correo ya está registrado.');
+      return;
+    }
+
+    // 5. Guardar usuario
+    usersDb.push(this.usuario);
+    await this.storage.set('users_db', usersDb);
+
+    // 6. Éxito
+    this.mostrarToast('¡Cuenta creada con éxito! Ahora inicia sesión.');
+    this.navCtrl.navigateBack('/login');
   }
 
-    async presentAlert(message: string) {
+  async mostrarAlerta(header: string, message: string) {
     const alert = await this.alertController.create({
-      header: 'Mensaje',
-      message: message,
+      header,
+      message,
       buttons: ['OK']
     });
-
     await alert.present();
   }
 
-   guardar() { 
-
-    const fechaFormateada = this.formtearFechaPipe.transform(this.selectedDate);
-
-    if (this.nombre.trim() === '' || this.apellido.trim() === '') {
-      this.presentAlert('Error: nombre y apellido vacios');
-    } else {
-      this.presentAlert('Datos Correctos  usuario:  '+this.nombre+' fecha nacimiento: '+fechaFormateada);  //
-    }
+  async mostrarToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color: 'success',
+      position: 'bottom'
+    });
+    await toast.present();
   }
-
-
 }

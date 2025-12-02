@@ -1,82 +1,58 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <!--<app-company-name [companyName]="'DronStore'"></app-company-name>-->
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      <ion-back-button defaultHref="login" color="light"></ion-back-button>
     </ion-buttons>
-
-    <!-- Título centrado opcional -->
-    <ion-title class="center-title"> Registro</ion-title>
-
-    <!-- Botón de menú a la derecha-->
-    <ion-buttons slot="end">
-      <ion-menu-button menu="mainMenu"></ion-menu-button>
-    </ion-buttons> 
+    <ion-title>Crear Cuenta</ion-title>
   </ion-toolbar>
 </ion-header>
 
-
-<ion-content [fullscreen]="true"> 
-
-   
-    <ion-card>
-
+<ion-content class="ion-padding bg-light">
   
-      <!-- Creamos los campos para el home-->
-      <ion-card-content>
+  <div class="ion-text-center ion-padding-vertical">
+    <ion-icon name="wallet-outline" style="font-size: 60px; color: var(--ion-color-primary);"></ion-icon>
+    <h2 style="color: var(--ion-color-dark);">Gasto Rápido</h2>
+    <p class="ion-text-muted">Crea una cuenta para comenzar</p>
+  </div>
 
-      <ion-item>
-        <ion-label position="floating">Nombre</ion-label>
-        <ion-input type="text" [(ngModel)]="nombre"></ion-input>
+  <ion-card style="border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+    <ion-card-content>
+      
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input [(ngModel)]="usuario.nombre" type="text" placeholder="Ej: Juan"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">Apellido</ion-label>
-        <ion-input type="text" [(ngModel)]="apellido"></ion-input>
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked">Apellido</ion-label>
+        <ion-input [(ngModel)]="usuario.apellido" type="text" placeholder="Ej: Pérez"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">usuario</ion-label>
-        <ion-input type="text" [(ngModel)]="usuario"></ion-input>
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked">Correo Electrónico</ion-label>
+        <ion-input [(ngModel)]="usuario.email" type="email" placeholder="juan@correo.com"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">Contraseña</ion-label>
-        <ion-input type="password" [(ngModel)]="password"></ion-input>
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input [(ngModel)]="usuario.password" type="password" placeholder="********"></ion-input>
       </ion-item>
 
-
-      <ion-item>
-        <ion-label>Nivel de Educacion</ion-label>
-        <ion-select [(ngModel)]="selectedOption">
-          <ion-select-option value="option1">Universitario</ion-select-option>
-          <ion-select-option value="option2">Magister</ion-select-option>
-          <ion-select-option value="option3">Doctorado</ion-select-option>
-        </ion-select>
+      <ion-item lines="none">
+        <ion-label>Fecha de Nacimiento</ion-label>
+        <ion-datetime-button datetime="dob"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="dob" presentation="date" [(ngModel)]="usuario.fechaNacimiento"></ion-datetime>
+          </ng-template>
+        </ion-modal>
       </ion-item>
 
-      <ion-item>
-        <ion-label>Fecha Nacimiento</ion-label>
-        <ion-item>  
+      <ion-button expand="block" size="large" class="ion-margin-top" (click)="guardar()">
+        Registrarme
+      </ion-button>
 
-           <!-- Componente de Angular Material-->
-           <mat-form-field>
-            <mat-label>dd/mm/yyyy</mat-label>
-            <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">  
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker> 
-          </mat-form-field>  
- 
-           
-        </ion-item>
-      </ion-item>
+    </ion-card-content>
+  </ion-card>
 
-      </ion-card-content>
-
-        <!-- Creamos el boton -->
-
-        <ion-button (click)="guardar()"  expand="block" fill="clear">Guardar Datos</ion-button> 
-
-    </ion-card>
-   
 </ion-content>

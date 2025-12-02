@@ -1,10 +1,17 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Gasto Rápido</ion-title>
+    <!-- Botón Logout -->
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- 1. Filtros de tiempo -->
   <ion-segment [(ngModel)]="scope" (ionChange)="refreshTotals()">
     <ion-segment-button value="day"><ion-label>Hoy</ion-label></ion-segment-button>
     <ion-segment-button value="month"><ion-label>Mes</ion-label></ion-segment-button>
@@ -12,15 +19,17 @@
     <ion-segment-button value="all"><ion-label>Total</ion-label></ion-segment-button>
   </ion-segment>
 
+  <!-- 2. KPI (El total grande va primero) -->
   <ion-card class="kpi">
     <ion-card-header>
       <ion-card-title class="kpi-label">Total {{ label }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <h1 class="kpi-number">{{ total | currency:'CLP':'$':'1.0-0' }}</h1>
+      <h1 class="kpi-number">{{ display | currency:'CLP':'symbol':'1.0-0' }}</h1>
     </ion-card-content>
   </ion-card>
 
+  <!-- 3. Gráfico (El detalle va después) -->
   <ion-card>
     <ion-card-header>
       <ion-card-title>Resumen por Categoría</ion-card-title>
@@ -30,5 +39,6 @@
     </ion-card-content>
   </ion-card>
 
+  <!-- 4. Botón de acción -->
   <ion-button expand="block" routerLink="/gastos">Ir a gastos</ion-button>
 </ion-content>

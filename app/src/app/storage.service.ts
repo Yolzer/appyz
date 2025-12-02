@@ -1,15 +1,42 @@
 import { Injectable } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class StorageService {
-  get<T>(key: string, fallback: T): T {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
+
+  constructor() { }
+
+  // Guardar datos (Convierte objetos a texto para guardar)
+  async set(key: string, value: any): Promise<void> {
+    try {
+      await localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      console.error('Error guardando en storage', e);
+    }
   }
-  set<T>(key: string, value: T): void {
-    localStorage.setItem(key, JSON.stringify(value));
+
+  // Obtener datos (Convierte texto a objetos reales)
+  async get<T>(key: string): Promise<T | null> {
+    try {
+      const value = await localStorage.getItem(key);
+      if (!value) {
+        return null;
+      }
+      return JSON.parse(value);
+    } catch (e) {
+      console.error('Error leyendo storage', e);
+      return null;
+    }
   }
-  remove(key: string): void {
-    localStorage.removeItem(key);
+
+  // Eliminar un dato
+  async remove(key: string): Promise<void> {
+    await localStorage.removeItem(key);
+  }
+
+  // Limpiar todo (útil para cerrar sesión o resetear)
+  async clear(): Promise<void> {
+    await localStorage.clear();
   }
 }

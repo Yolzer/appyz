@@ -10,7 +10,7 @@ export interface Expense {
   date: string;
   notes?: string;
   category?: string;
-  image?: string; // Propiedad para la foto del recibo
+  image?: string;
 }
 
 const STORAGE_KEY = 'gasto_rapido_v1';
@@ -19,35 +19,35 @@ const API_CACHE_KEY = 'api_users_cache';
 @Injectable({ providedIn: 'root' })
 export class ExpenseService {
   private data: Expense[] = [];
-  private _users: any[] = []; // Datos de API externa
+  private _users: any[] = [];
 
   constructor(private store: StorageService, private http: HttpClient) {
     this.init();
   }
 
   async init() {
-    this.data = this.store.get<Expense[]>(STORAGE_KEY, []);
+    // CORRECCIÓN: Añadido 'await' y tipo genérico explícito
+    const storedData = await this.store.get<Expense[]>(STORAGE_KEY);
+    this.data = storedData || [];
+    
     await this.loadUsers();
   }
 
-  // --- Requerimiento: API REST + Persistencia Offline ---
   async loadUsers() {
     try {
-      console.log('Conectando a API Rest...');
-      // Consumo de API real (JSONPlaceholder)
+      // Intento conexión a API
       const users = await lastValueFrom(
         this.http.get<any[]>('https://jsonplaceholder.typicode.com/users')
       );
       this._users = users;
-
-      // Guardar copia local (Persistencia)
-      this.store.set(API_CACHE_KEY, users);
-      console.log('API Online: Usuarios actualizados');
-
+      // Guardar en persistencia local
+      await this.store.set(API_CACHE_KEY, users);
+      console.log('Usuarios cargados desde API');
     } catch (error) {
-      console.warn('API Offline: Cargando datos guardados', error);
-      // Si falla (código 404), recuperar del storage local
-      this._users = this.store.get(API_CACHE_KEY, []);
+      console.warn('Error API, cargando offline', error);
+      // CORRECCIÓN: Añadido 'await' y tipo genérico
+      const storedUsers = await this.store.get<any[]>(API_CACHE_KEY);
+      this._users = storedUsers || [];
     }
   }
 
@@ -55,7 +55,7 @@ export class ExpenseService {
     return this._users;
   }
 
-  // --- Métodos CRUD (Existentes) ---
+  // --- CRUD ---
 
   list(): Expense[] {
     return [...this.data].sort(
