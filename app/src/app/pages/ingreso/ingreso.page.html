@@ -1,0 +1,102 @@
+<ion-header>
+  <!-- Usamos el color 'success' (verde) para diferenciar que es un INGRESO -->
+  <ion-toolbar color="success">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text="Volver"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrar Ingreso</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding bg-light">
+  
+  <div class="ion-text-center ion-margin-bottom ion-padding-top">
+    <ion-icon name="wallet" style="font-size: 50px; color: var(--ion-color-success);"></ion-icon>
+    <h3 style="color: #444; margin-top: 5px;">Nuevo Ingreso</h3>
+  </div>
+
+  <ion-card style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <ion-card-content>
+      
+      <!-- Tipo de Ingreso -->
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked" color="medium">Tipo de Ingreso</ion-label>
+        <ion-select [(ngModel)]="income.type" placeholder="Seleccione tipo" interface="alert" (ionChange)="limpiarCamposDinamicos()">
+          <ion-select-option value="Sueldo">Sueldo</ion-select-option>
+          <ion-select-option value="Esporadico">Esporádico / Extra</ion-select-option>
+          <ion-select-option value="Inversion">Inversión</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Monto -->
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked" color="medium">Monto ($)</ion-label>
+        <ion-input type="number" [(ngModel)]="income.amount" placeholder="Ej: 500000" style="font-size: 1.2rem; font-weight: bold; color: var(--ion-color-success);"></ion-input>
+      </ion-item>
+
+      <!-- Título -->
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked" color="medium">Descripción</ion-label>
+        <ion-input type="text" [(ngModel)]="income.title" placeholder="Ej: Pago de nómina"></ion-input>
+      </ion-item>
+
+      <!-- DINAMICO: Si es Sueldo -->
+      <div *ngIf="income.type === 'Sueldo'" class="animate__animated animate__fadeIn">
+        <ion-item lines="full" class="ion-margin-bottom">
+          <ion-label position="stacked" color="medium">Frecuencia de Pago</ion-label>
+          <ion-select [(ngModel)]="income.frequency" interface="alert" placeholder="Seleccione frecuencia">
+            <ion-select-option value="Semanal">Semanal</ion-select-option>
+            <ion-select-option value="Mensual">Mensual</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <!-- DINAMICO: Si es Esporádico -->
+      <div *ngIf="income.type === 'Esporadico'" class="animate__animated animate__fadeIn">
+        <ion-item lines="full" class="ion-margin-bottom">
+          <ion-label position="stacked" color="medium">Origen del Dinero</ion-label>
+          <ion-select [(ngModel)]="income.source" interface="alert" placeholder="Seleccione origen">
+            <ion-select-option value="Venta Articulo">Venta Artículo</ion-select-option>
+            <ion-select-option value="Servicio">Servicio Prestado</ion-select-option>
+            <ion-select-option value="Comida">Venta Comida</ion-select-option>
+            <ion-select-option value="Prestamo">Préstamo</ion-select-option>
+            <ion-select-option value="Otros">Otros</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <!-- DINAMICO: Si es Inversión -->
+      <div *ngIf="income.type === 'Inversion'" class="animate__animated animate__fadeIn">
+        <ion-item lines="full" class="ion-margin-bottom">
+          <ion-label position="stacked" color="medium">Tipo de Activo</ion-label>
+          <ion-select [(ngModel)]="income.source" interface="alert" placeholder="Seleccione activo">
+            <ion-select-option value="Acciones">Acciones</ion-select-option>
+            <ion-select-option value="Criptomonedas">Criptomonedas</ion-select-option>
+            <ion-select-option value="Bienes Raices">Bienes Raíces</ion-select-option>
+            <ion-select-option value="Plazo Fijo">Depósito a Plazo</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <!-- Fecha -->
+      <ion-item lines="none" class="ion-margin-top">
+        <ion-label color="medium">Fecha de Recepción</ion-label>
+        <ion-datetime-button datetime="datein"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="datein" presentation="date" [(ngModel)]="income.date"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+      </ion-item>
+
+      <br>
+
+      <ion-button expand="block" color="success" shape="round" size="large" (click)="guardar()" 
+                  [disabled]="!income.amount || !income.type">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        Guardar Ingreso
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>

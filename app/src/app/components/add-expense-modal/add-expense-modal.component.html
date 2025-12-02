@@ -1,6 +1,6 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Nuevo Gasto</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>{{ isEditMode ? 'Editar Gasto' : 'Nuevo Gasto' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">Cerrar</ion-button>
     </ion-buttons>
@@ -30,25 +30,27 @@
 
   <ion-item>
     <ion-label>Fecha</ion-label>
-    <ion-datetime-button datetime="datetime"></ion-datetime-button>
+    <ion-datetime-button datetime="modalDate"></ion-datetime-button>
     <ion-modal [keepContentsMounted]="true">
       <ng-template>
-        <ion-datetime id="datetime" presentation="date" [(ngModel)]="date"></ion-datetime>
+        <ion-datetime id="modalDate" presentation="date" [(ngModel)]="date"></ion-datetime>
       </ng-template>
     </ion-modal>
   </ion-item>
 
-
   <ion-item lines="none" class="ion-margin-vertical">
-    <ion-label>Foto del Recibo (Opcional)</ion-label>
+    <ion-label>Foto del Recibo</ion-label>
     <ion-button slot="end" (click)="takePhoto()" fill="outline">
       <ion-icon slot="start" name="camera"></ion-icon>
-      Capturar
+      {{ receiptImage ? 'Cambiar Foto' : 'Capturar' }}
     </ion-button>
   </ion-item>
-  <ion-img [src]="receiptImage" *ngIf="receiptImage" style="max-height: 150px; border-radius: 8px; border: 1px solid #ccc;"></ion-img>
+  
+  <div *ngIf="receiptImage" class="ion-text-center ion-margin-bottom">
+    <img [src]="receiptImage" style="max-height: 150px; border-radius: 8px; border: 1px solid #ccc;" />
+  </div>
 
   <ion-button expand="block" size="large" class="ion-margin-top" (click)="save()" [disabled]="!amount || !title">
-    Guardar Gasto
+    {{ isEditMode ? 'Actualizar Gasto' : 'Guardar Gasto' }}
   </ion-button>
 </ion-content>

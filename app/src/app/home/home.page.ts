@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ExpenseService } from '../expense.service';
 import { Chart, registerables } from 'chart.js';
-import { NavController, AlertController } from '@ionic/angular'; // Importar NavController y Alert
+import { NavController, AlertController } from '@ionic/angular';
 
 Chart.register(...registerables);
-
-type Scope = 'day'|'month'|'year'|'all';
 
 @Component({
   selector: 'app-home',
@@ -14,36 +12,37 @@ type Scope = 'day'|'month'|'year'|'all';
   standalone: false
 })
 export class HomePage implements OnInit {
-  scope: Scope = 'day';
-  total = 0;
-  display = 0;
-  label = 'de hoy';
-  chart: any;
+  
+  viewMode: 'day' | 'month' | 'year' = 'day';
+  selectedDate: string = new Date().toISOString();
+  
+  totals = { expense: 0, income: 0 };
+  
+  incomeChart: any;
+  balanceChart: any;
+  expenseChart: any;
 
   constructor(
-    private exp: ExpenseService,
+    private expService: ExpenseService,
     private navCtrl: NavController,
     private alertController: AlertController
   ) {}
 
-  ngOnInit(): void {
-    this.refreshTotals();
+  ngOnInit() {}
+
+  ionViewWillEnter() {
+    this.updateDashboard();
   }
 
-  // --- Lógica Logout ---
+  // Eliminamos openAddExpense() porque ya no se usa el modal aquí
+
   async logout() {
     const alert = await this.alertController.create({
       header: 'Cerrar Sesión',
-      message: '¿Estás seguro de que deseas salir?',
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Salir',
-          handler: () => {
-            // Borrar sesión
+        { text: 'Salir', handler: () => {
             localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('user_name');
-            // Redirigir al Login
             this.navCtrl.navigateRoot('/login');
           }
         }
@@ -51,78 +50,79 @@ export class HomePage implements OnInit {
     });
     await alert.present();
   }
-  // ---------------------
 
-  refreshTotals(): void {
-    const now = new Date();
+  updateDashboard() {
+    const dateObj = new Date(this.selectedDate);
+    const data = this.expService.getTotalsByDate(dateObj, this.viewMode);
     
-    switch (this.scope) {
-      case 'day':  
-        this.total = this.exp.totalByDay(now);  
-        this.label = 'de hoy'; 
-        break;
-      case 'month':
-        this.total = this.exp.totalByMonth(now);
-        this.label = 'del mes'; 
-        break;
-      case 'year': 
-        this.total = this.exp.totalByYear(now); 
-        this.label = 'del año'; 
-        break;
-      default:     
-        this.total = this.exp.totalAll();       
-        this.label = 'acumulado';
-    }
+    this.totals.expense = data.expense;
+    this.totals.income = data.income;
 
-    this.animateCounter(this.display, this.total, 240);
-    
-    setTimeout(() => {
-      this.updateChart();
-    }, 100);
+    this.renderIncomeChart(data.incomeBreakdown);
+    this.renderBalanceChart(data.income, data.expense);
+    this.renderExpenseChart(data.expenseBreakdown);
   }
 
-  private animateCounter(from: number, to: number, ms: number) {
-    const start = performance.now();
-    const step = (t: number) => {
-      const p = Math.min(1, (t - start)/ms);
-      this.display = Math.round((from + (to - from) * p) * 100) / 100;
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }
-
-  updateChart() {
-    const canvas = document.getElementById('expenseChart') as HTMLCanvasElement;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
+  renderIncomeChart(dataMap: any) {
+    const ctx = (document.getElementById('incomeChart') as HTMLCanvasElement)?.getContext('2d');
     if (!ctx) return;
-    
-    // Datos Dummy (puedes conectarlo con expense.service si quieres datos reales)
-    const data = [12000, 5000, 3000, 2000, 1500]; 
-    const labels = ['Comida', 'Transporte', 'Casa', 'Ocio', 'Otros'];
+    if (this.incomeChart) this.incomeChart.destroy();
 
-    if (this.chart) this.chart.destroy(); 
+    const labels = Object.keys(dataMap);
+    const values = Object.values(dataMap);
 
-    this.chart = new Chart(ctx, {
+    this.incomeChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: labels,
+        labels: labels.length ? labels : ['Sin datos'],
         datasets: [{
-          data: data,
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-          borderWidth: 1
+          data: values.length ? values : [1],
+          backgroundColor: ['#2dd36f', '#2fdf75', '#35eb80', '#4bf08f', '#e0e0e0'],
+          borderWidth: 0
         }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }
+      options: { responsive: true, plugins: { legend: { display: true, position: 'right' } } }
+    });
+  }
+
+  renderBalanceChart(inc: number, exp: number) {
+    const ctx = (document.getElementById('balanceChart') as HTMLCanvasElement)?.getContext('2d');
+    if (!ctx) return;
+    if (this.balanceChart) this.balanceChart.destroy();
+
+    this.balanceChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Ingresos', 'Gastos'],
+        datasets: [{
+          data: [inc, exp],
+          backgroundColor: ['#2dd36f', '#eb445a'],
+          borderWidth: 0
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+  }
+
+  renderExpenseChart(dataMap: any) {
+    const ctx = (document.getElementById('expenseChart') as HTMLCanvasElement)?.getContext('2d');
+    if (!ctx) return;
+    if (this.expenseChart) this.expenseChart.destroy();
+
+    const labels = Object.keys(dataMap);
+    const values = Object.values(dataMap);
+
+    this.expenseChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels.length ? labels : ['Sin datos'],
+        datasets: [{
+          data: values.length ? values : [1],
+          backgroundColor: ['#eb445a', '#f06577', '#f27888', '#f58a99', '#e0e0e0'],
+          borderWidth: 0
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: true, position: 'right' } } }
     });
   }
 }

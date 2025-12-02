@@ -1,7 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Gasto Rápido</ion-title>
-    <!-- Botón Logout -->
+    <ion-title>Dashboard Financiero</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="logout()">
         <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
@@ -10,35 +9,107 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <!-- 1. Filtros de tiempo -->
-  <ion-segment [(ngModel)]="scope" (ionChange)="refreshTotals()">
-    <ion-segment-button value="day"><ion-label>Hoy</ion-label></ion-segment-button>
-    <ion-segment-button value="month"><ion-label>Mes</ion-label></ion-segment-button>
-    <ion-segment-button value="year"><ion-label>Año</ion-label></ion-segment-button>
-    <ion-segment-button value="all"><ion-label>Total</ion-label></ion-segment-button>
-  </ion-segment>
+<ion-content class="ion-padding bg-light">
 
-  <!-- 2. KPI (El total grande va primero) -->
-  <ion-card class="kpi">
-    <ion-card-header>
-      <ion-card-title class="kpi-label">Total {{ label }}</ion-card-title>
-    </ion-card-header>
+  <!-- FILTRO AVANZADO -->
+  <ion-card class="filter-card">
     <ion-card-content>
-      <h1 class="kpi-number">{{ display | currency:'CLP':'symbol':'1.0-0' }}</h1>
+      <ion-segment [(ngModel)]="viewMode" (ionChange)="updateDashboard()">
+        <ion-segment-button value="day">
+          <ion-label>Día</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="month">
+          <ion-label>Mes</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="year">
+          <ion-label>Año</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <div class="date-selector ion-margin-top ion-text-center">
+        <ion-datetime-button datetime="filterDate"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="filterDate" presentation="date" 
+                          [(ngModel)]="selectedDate" 
+                          (ionChange)="updateDashboard()"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+        <p class="info-text" *ngIf="viewMode === 'day'">Viendo datos del {{ selectedDate | date:'dd/MM/yyyy' }}</p>
+        <p class="info-text" *ngIf="viewMode === 'month'">Viendo mes de {{ selectedDate | date:'MMMM yyyy' }}</p>
+      </div>
     </ion-card-content>
   </ion-card>
 
-  <!-- 3. Gráfico (El detalle va después) -->
+  <!-- SECCIÓN 1: INGRESOS -->
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Resumen por Categoría</ion-card-title>
+      <ion-card-title class="ion-text-center text-success">Ingresos</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <canvas id="expenseChart"></canvas>
+      <div class="chart-container">
+        <canvas id="incomeChart"></canvas>
+      </div>
+      <h2 class="ion-text-center total-text">+ {{ totals.income | currency:'CLP':'symbol':'1.0-0' }}</h2>
     </ion-card-content>
   </ion-card>
 
-  <!-- 4. Botón de acción -->
-  <ion-button expand="block" routerLink="/gastos">Ir a gastos</ion-button>
+  <!-- SECCIÓN 2: BALANCE (Resta) -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center text-primary">Balance Neto</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="chart-container">
+        <canvas id="balanceChart"></canvas>
+      </div>
+      <h1 class="ion-text-center total-text" 
+          [class.text-danger]="(totals.income - totals.expense) < 0"
+          [class.text-success]="(totals.income - totals.expense) >= 0">
+        {{ (totals.income - totals.expense) | currency:'CLP':'symbol':'1.0-0' }}
+      </h1>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- SECCIÓN 3: GASTOS -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center text-danger">Gastos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="chart-container">
+        <canvas id="expenseChart"></canvas>
+      </div>
+      <h2 class="ion-text-center total-text">- {{ totals.expense | currency:'CLP':'symbol':'1.0-0' }}</h2>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- BOTONES DE ACCIÓN -->
+  <div class="action-buttons">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-button expand="block" color="success" routerLink="/ingreso">
+            <ion-icon slot="start" name="arrow-up-circle"></ion-icon>
+            + Ingreso
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <!-- CORRECCIÓN AQUÍ: Usar routerLink y quitar (click) -->
+          <ion-button expand="block" color="danger" routerLink="/agregar-gasto">
+            <ion-icon slot="start" name="arrow-down-circle"></ion-icon>
+            - Gasto
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" fill="outline" routerLink="/gastos">
+            Ver Historial Completo
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
 </ion-content>

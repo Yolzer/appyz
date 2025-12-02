@@ -1,48 +1,56 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Mis Gastos</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Historial</ion-title>
+  </ion-toolbar>
+  
+  <ion-toolbar color="light">
+    <ion-segment [(ngModel)]="filterType" (ionChange)="filterData()">
+      <ion-segment-button value="all"><ion-label>Todos</ion-label></ion-segment-button>
+      <ion-segment-button value="income"><ion-label>Ingresos</ion-label></ion-segment-button>
+      <ion-segment-button value="expense"><ion-label>Gastos</ion-label></ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding bg-light">
 
-  <ion-list>
-    <ion-item-sliding *ngFor="let g of exp.list()">
-      <ion-item button (click)="go(g.id)">
-        
-        <ion-thumbnail slot="start" *ngIf="g.image">
-          <img [src]="g.image" alt="recibo" />
-        </ion-thumbnail>
-        <ion-icon [name]="getIcon(g.category || '')" slot="start" *ngIf="!g.image" size="large"></ion-icon>
-        
-        <ion-label>
-          <h2>{{ g.title }}</h2>
-          <p>{{ g.category || 'Sin categoría' }} - {{ g.date | date:'shortDate' }}</p>
-        </ion-label>
-        <ion-note slot="end" color="danger">
-          -${{ g.amount | number:'1.0-0' }}
-        </ion-note>
-      </ion-item>
+  <div *ngIf="filteredMovements.length === 0" class="ion-text-center ion-padding-top">
+    <ion-icon name="documents-outline" style="font-size: 60px; color: var(--ion-color-medium);"></ion-icon>
+    <p class="ion-text-muted">No hay movimientos registrados</p>
+  </div>
 
+  <ion-list class="history-list">
+    <!-- Lista de Movimientos -->
+    <ion-item *ngFor="let m of filteredMovements">
+      
+      <!-- Icono -->
+      <ion-avatar slot="start" [class.bg-green]="m.type === 'income'" [class.bg-red]="m.type === 'expense'">
+        <ion-icon [name]="getIcon(m)" color="light"></ion-icon>
+      </ion-avatar>
 
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="borrarGasto(g.id)">
-          <ion-icon slot="icon-only" name="trash"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
+      <!-- Info -->
+      <ion-label class="ion-text-wrap">
+        <h2>{{ m.title }}</h2>
+        <p>{{ m.date | date:'dd/MM' }} • {{ m.category || m.source || 'General' }}</p>
+        <p [class.text-success]="m.type === 'income'" [class.text-danger]="m.type === 'expense'" style="font-weight: bold;">
+          {{ m.type === 'income' ? '+' : '-' }} {{ m.amount | currency:'CLP':'symbol':'1.0-0' }}
+        </p>
+      </ion-label>
+
+      <!-- BOTONES DE ACCIÓN A LA DERECHA (Como pediste) -->
+      <ion-buttons slot="end">
+        <ion-button color="medium" (click)="editMovement(m)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" (click)="deleteMovement(m)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+
+    </ion-item>
   </ion-list>
 
- 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="openAdd()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
-  <ion-fab slot="fixed" vertical="bottom" horizontal="start">
-    <ion-fab-button color="light" size="small" (click)="goHome()">
-      <ion-icon name="arrow-back"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { ExpenseService } from '../../expense.service';
-import { ModalController } from '@ionic/angular';
-import { AddExpenseModalComponent } from '../../components/add-expense-modal/add-expense-modal.component';
+import { AlertController, NavController } from '@ionic/angular';
+import { NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-gastos',
@@ -11,51 +10,43 @@ import { AddExpenseModalComponent } from '../../components/add-expense-modal/add
   standalone: false
 })
 export class GastosPage {
+  movements: any[] = [];
+  filteredMovements: any[] = [];
+  filterType: 'all' | 'income' | 'expense' = 'all';
 
   constructor(
-    public exp: ExpenseService,
-    private router: Router,
-    private modalCtrl: ModalController
+    private expService: ExpenseService,
+    private alertCtrl: AlertController,
+    private navCtrl: NavController
   ) {}
 
-  goHome() {
-    this.router.navigateByUrl('/home');
+  ionViewWillEnter() {
+    this.loadData();
   }
 
-  async openAdd() {
-    const modal = await this.modalCtrl.create({
-      component: AddExpenseModalComponent
-    });
-
-    modal.onDidDismiss().then((result) => {
-      if (result.data) {
-        this.addExpense(result.data);
-      }
-    });
-
-    await modal.present();
+  loadData() {
+    const expenses = this.expService.list().map((e: any) => ({ ...e, type: 'expense' }));
+    const incomes = this.expService.listIncomes().map((i: any) => ({ ...i, type: 'income', category: i.type })); 
+    
+    this.movements = [...expenses, ...incomes].sort((a, b) => 
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+    
+    this.filterData();
   }
 
-  private addExpense(data: any) {
-    const amount = Number(data?.amount);
-    const title  = (data?.title ?? '').trim();
-
-    if (!title || !amount || amount <= 0) return;
-
-    this.exp.add({
-      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-      title,
-      amount,
-      date: data.date ? data.date : new Date().toISOString(),
-      notes: data?.notes ?? '',
-      category: data?.category ?? '',
-      image: data?.image 
-    });
+  filterData() {
+    if (this.filterType === 'all') {
+      this.filteredMovements = this.movements;
+    } else {
+      this.filteredMovements = this.movements.filter(m => m.type === this.filterType);
+    }
   }
 
-
-  getIcon(category: string): string {
-    switch(category) {
+  getIcon(m: any) {
+    if (m.type === 'income') return 'arrow-up-circle';
+    const cat = m.category || '';
+    switch (cat) {
       case 'Comida': return 'fast-food';
       case 'Transporte': return 'bus';
       case 'Casa': return 'home';
@@ -64,12 +55,40 @@ export class GastosPage {
     }
   }
 
-
-  borrarGasto(id: string) {
-    this.exp.remove(id);
+  async deleteMovement(m: any) {
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar',
+      message: '¿Confirma eliminar este registro?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Borrar',
+          handler: () => {
+            if (m.type === 'expense') {
+              this.expService.remove(m.id);
+            } else {
+              this.expService.removeIncome(m.id);
+            }
+            this.loadData(); 
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
-  go(id: string) {
-    this.router.navigate(['/detalle-gasto', id]);
+  editMovement(m: any) {
+    const navExtras: NavigationExtras = {
+      queryParams: { id: m.id }
+    };
+
+    if (m.type === 'expense') {
+      // Ir a página de editar gasto
+      this.navCtrl.navigateForward(['/agregar-gasto'], navExtras);
+    } else {
+      // Ir a página de editar ingreso (usando el parámetro editIncomeId)
+      const incomeExtras: NavigationExtras = { queryParams: { editIncomeId: m.id } };
+      this.navCtrl.navigateForward(['/ingreso'], incomeExtras);
+    }
   }
 }

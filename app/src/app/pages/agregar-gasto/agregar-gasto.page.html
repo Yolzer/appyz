@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text="Volver"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ isEdit ? 'Editar Gasto' : 'Nuevo Gasto' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding bg-light">
+  
+  <div class="ion-text-center ion-margin-bottom ion-padding-top">
+    <ion-icon name="cart" style="font-size: 50px; color: var(--ion-color-danger);"></ion-icon>
+    <h3 style="color: #444; margin-top: 5px;">Registrar Salida</h3>
+  </div>
+
+  <ion-card style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <ion-card-content>
+      
+      <!-- Monto -->
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked" color="medium">Monto ($)</ion-label>
+        <ion-input type="number" [(ngModel)]="expense.amount" placeholder="Ej: 5000" style="font-size: 1.2rem; font-weight: bold; color: var(--ion-color-danger);"></ion-input>
+      </ion-item>
+
+      <!-- Título -->
+      <ion-item lines="full" class="ion-margin-bottom">
+        <ion-label position="stacked" color="medium">Descripción</ion-label>
+        <ion-input type="text" [(ngModel)]="expense.title" placeholder="Ej: Almuerzo"></ion-input>
+      </ion-item>
+
+      <!-- Categoría -->
+      <div class="ion-margin-bottom">
+        <ion-label color="medium" class="ion-margin-start">Categoría</ion-label>
+        <div class="categories-container ion-padding-top">
+          <ion-chip *ngFor="let cat of categories"
+                    [color]="expense.category === cat.name ? 'danger' : 'medium'"
+                    [outline]="expense.category !== cat.name"
+                    (click)="expense.category = cat.name">
+            <ion-icon [name]="cat.icon"></ion-icon>
+            <ion-label>{{ cat.name }}</ion-label>
+          </ion-chip>
+        </div>
+      </div>
+
+      <!-- Fecha -->
+      <ion-item lines="none" class="ion-margin-top">
+        <ion-label color="medium">Fecha</ion-label>
+        <ion-datetime-button datetime="dateexp"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="dateexp" presentation="date" [(ngModel)]="expense.date"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+      </ion-item>
+
+      <!-- Cámara -->
+      <ion-item lines="none" class="ion-margin-vertical">
+        <ion-label color="medium">Foto del Recibo</ion-label>
+        <ion-button slot="end" (click)="takePhoto()" fill="outline" color="danger">
+          <ion-icon slot="start" name="camera"></ion-icon>
+          {{ expense.image ? 'Cambiar' : 'Capturar' }}
+        </ion-button>
+      </ion-item>
+      
+      <div *ngIf="expense.image" class="ion-text-center ion-margin-bottom">
+        <img [src]="expense.image" style="max-height: 150px; border-radius: 8px; border: 1px solid #ccc;" />
+      </div>
+
+      <ion-button expand="block" color="danger" shape="round" size="large" class="ion-margin-top" (click)="guardar()" 
+                  [disabled]="!expense.amount || !expense.title">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        {{ isEdit ? 'Actualizar' : 'Guardar' }}
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,24 +1,11 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/theming/
 
-/* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
@@ -26,55 +13,60 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 /**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
+ * ==============================================
+ * CORRECCIÓN VISUAL DE ALERTAS (POPUPS DE SELECCIÓN)
+ * ==============================================
  */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
-
-/**
- * Angular Material
- **/
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
-
-/* estilos globales*/ 
-
-body {
-  --ion-background-color: #f4f5f8; /* Gris muy suave */
+/* Fondo del popup blanco solido */
+.alert-wrapper {
+  background-color: #ffffff !important;
+  --background: #ffffff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
 }
 
- ion-header {
-    --background: transparent; /* Fondo transparente */
-    --ion-toolbar-background: transparent; /* Fondo transparente para la toolbar */
-    --ion-toolbar-border-color: transparent; /* Elimina el borde */
-  }
+/* Título del popup en Azul Corporativo */
+.alert-head h2.alert-title {
+  color: var(--ion-color-primary) !important;
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
+}
 
-  ion-header,
-  ion-toolbar,
-  ion-buttons,
-  app-company-name {
-    color: #36abe0; /* Ajusta el color del texto o íconos a darkblue */
-  }
+/* Subtítulo o mensaje */
+.alert-sub-title, .alert-message {
+  color: #666666 !important;
+}
 
+/* Opciones de la lista (Texto Negro por defecto) */
+.alert-radio-button, .alert-checkbox-button {
+  color: #333333 !important;
+}
 
-  ion-header,
- ion-toolbar {
-  --ion-toolbar-border-color: transparent; /* Quita el borde */
-  --background: transparent;               /* Hace transparente la barra */ 
- }
- 
-  .header-md{
-    -webkit-box-shadow: none !important; /* Elimina la sombra */
-    box-shadow: none !important; /* Elimina la sombra */
-  }
+.alert-radio-label, .alert-checkbox-label {
+  color: #333333 !important;
+  font-weight: 500 !important;
+}
 
-  .title_tab h2 {
-    text-align: center;
-    color: #000000;
-  }
-  
+/* Opción SELECCIONADA (Azul y Negrita) */
+[aria-checked="true"] .alert-radio-label {
+  color: var(--ion-color-primary) !important;
+  font-weight: 800 !important;
+}
+
+/* El círculo de selección (Radio button) */
+.alert-radio-inner {
+  border-color: var(--ion-color-primary) !important; 
+  background-color: var(--ion-color-primary) !important;
+}
+
+/* Botones de Cancelar/OK */
+.alert-button {
+  color: var(--ion-color-primary) !important;
+  font-weight: 600 !important;
+}
+
+/* Fondo oscuro detrás del popup */
+ion-alert {
+  --backdrop-opacity: 0.6 !important;
+}
